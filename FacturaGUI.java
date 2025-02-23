@@ -1,9 +1,10 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.swing.*;
 
 class Factura implements Serializable {
     private String numero;
@@ -36,21 +37,31 @@ class Factura implements Serializable {
 
 public class FacturaGUI extends JFrame {
     private List<Factura> facturas = new ArrayList<>();
+    private JLabel lblReloj;
 
     public FacturaGUI() {
         setTitle("Gestión de Facturas");
-        setSize(400, 300);
+        setSize(500, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1));
+        panel.setLayout(new GridLayout(5, 1));
 
+        lblReloj = new JLabel("", SwingConstants.CENTER);
+        actualizarReloj();
+        new Timer(1000, e -> actualizarReloj()).start();
+        
+        JLabel lblBienvenida = new JLabel("Bienvenidos al Sistema de Factura - Manta, Manabí, Ecuador", SwingConstants.CENTER);
+        lblBienvenida.setFont(new Font("Arial", Font.BOLD, 12));
+        
         JButton btnRegistro = new JButton("Registrar Factura");
         JButton btnConsulta = new JButton("Consultar Factura");
         JButton btnMostrarArchivo = new JButton("Guardar en Archivo");
         JButton btnSalir = new JButton("Salir");
 
+        panel.add(lblBienvenida);
+        panel.add(lblReloj);
         panel.add(btnRegistro);
         panel.add(btnConsulta);
         panel.add(btnMostrarArchivo);
@@ -59,9 +70,14 @@ public class FacturaGUI extends JFrame {
         btnRegistro.addActionListener(e -> registrarFactura());
         btnConsulta.addActionListener(e -> consultarFactura());
         btnMostrarArchivo.addActionListener(e -> guardarEnArchivo());
-        btnSalir.addActionListener(e -> System.exit(0));
+        btnSalir.addActionListener(e -> salirAplicacion());
 
         add(panel);
+    }
+
+    private void actualizarReloj() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        lblReloj.setText("Fecha y Hora: " + sdf.format(new Date()));
     }
 
     private void registrarFactura() {
@@ -122,6 +138,11 @@ public class FacturaGUI extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar en archivo.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void salirAplicacion() {
+        JOptionPane.showMessageDialog(this, "Gracias por visitarnos. ¡Esperamos verte pronto!");
+        System.exit(0);
     }
 
     public static void main(String[] args) {
